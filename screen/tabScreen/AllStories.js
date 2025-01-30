@@ -19,7 +19,7 @@ const AllStories = () => {
   const navigation = useNavigation();
   const {stories} = useVampireContext();
 
-  const handleStoryPress = (story) => {
+  const handleStoryPress = story => {
     navigation.navigate('ScaryStoryDetails', {story});
   };
 
@@ -47,14 +47,14 @@ const AllStories = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.headerTitle}>Stories</Text>
-      
-      <ScrollView 
+
+      <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}>
         <View style={styles.storiesGrid}>
           {/* Render predefined scary stories */}
           {scaryStory.map((story, index) => renderStoryCard(story, index))}
-          
+
           {/* Render user-created stories */}
           {stories.map((story, index) => renderStoryCard(story, index))}
         </View>
@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
     fontStyle: 'italic',
+    paddingTop: 50,
   },
   scrollContent: {
     flexGrow: 1,

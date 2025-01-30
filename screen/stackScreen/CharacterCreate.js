@@ -23,7 +23,9 @@ const CharacterCreate = () => {
   const [concept, setConcept] = useState('');
   const [sire, setSire] = useState('');
   const [selectedClan, setSelectedClan] = useState('Ventrue'); // Default selection
-  const [clanDescription, setClanDescription] = useState(CHARACTER.CLANS[0].description); // Add this new state
+  const [clanDescription, setClanDescription] = useState(
+    CHARACTER.CLANS[0].description,
+  ); // Add this new state
   const [clanTraits, setClanTraits] = useState(CHARACTER.CLANS[0].traits); // Add this new state
   const [hairStyle, setHairStyle] = useState('');
   const [eyeColor, setEyeColor] = useState('');
@@ -42,7 +44,7 @@ const CharacterCreate = () => {
     setCurrentStep(currentStep + 1);
   };
 
-  const handleClanSelection = (clan) => {
+  const handleClanSelection = clan => {
     setSelectedClan(clan.name);
     setClanDescription(clan.description);
     setClanTraits(clan.traits);
@@ -576,6 +578,7 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.3)',
+    marginTop: 50,
   },
   nextButtonText: {
     color: '#fff',
