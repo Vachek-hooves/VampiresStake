@@ -7,6 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Text,
+  Modal,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -22,6 +23,7 @@ const PuzzleGame = ({route}) => {
   const [pieces, setPieces] = useState([]);
   const [currentPiece, setCurrentPiece] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     initializePuzzle();
@@ -71,7 +73,6 @@ const PuzzleGame = ({route}) => {
       const endPosition = Math.round((piece.y._value) / PIECE_HEIGHT);
       const boundedPosition = Math.max(0, Math.min(endPosition, PIECES_COUNT - 1));
 
-      // Update positions
       const newPieces = pieces.map(p => {
         if (p.id === piece.id) {
           p.currentPosition = boundedPosition;
@@ -82,7 +83,6 @@ const PuzzleGame = ({route}) => {
           p.currentPosition += startPosition < boundedPosition ? -1 : 1;
         }
 
-        // Animate to new position
         Animated.spring(p.y, {
           toValue: p.currentPosition * PIECE_HEIGHT,
           useNativeDriver: true,
@@ -96,7 +96,7 @@ const PuzzleGame = ({route}) => {
       setPieces(newPieces);
       setCurrentPiece(null);
       
-      // Check if puzzle is complete
+      // Check completion after piece movement
       checkCompletion(newPieces);
     },
   });
@@ -105,7 +105,16 @@ const PuzzleGame = ({route}) => {
     const isComplete = currentPieces.every(
       piece => piece.currentPosition === piece.correctPosition
     );
-    setIsComplete(isComplete);
+    
+    if (isComplete && !showSuccessModal) {
+      setIsComplete(true);
+      setShowSuccessModal(true);
+    }
+  };
+
+  const handleContinue = () => {
+    setShowSuccessModal(false);
+    navigation.goBack();
   };
 
   return (
@@ -139,6 +148,26 @@ const PuzzleGame = ({route}) => {
           </Animated.View>
         ))}
       </View>
+
+      {/* Success Modal */}
+      <Modal
+        transparent={true}
+        visible={showSuccessModal}
+        animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.congratsText}>Congratulations!</Text>
+            <Text style={styles.modalText}>
+              You've successfully completed the puzzle!
+            </Text>
+            <TouchableOpacity
+              style={styles.continueButton}
+              onPress={handleContinue}>
+              <Text style={styles.continueButtonText}>Continue</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -180,6 +209,47 @@ const styles = StyleSheet.create({
     width: width,
     position: 'absolute',
     resizeMode: 'cover',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#142C38',
+    padding: 30,
+    borderRadius: 15,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+    width: '80%',
+  },
+  congratsText: {
+    color: '#fff',
+    fontSize: 28,
+    fontWeight: '600',
+    marginBottom: 15,
+    fontStyle: 'italic',
+  },
+  modalText: {
+    color: '#fff',
+    fontSize: 18,
+    textAlign: 'center',
+    marginBottom: 25,
+  },
+  continueButton: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
+  },
+  continueButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontStyle: 'italic',
   },
 });
 
