@@ -7,31 +7,64 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
+import {useVampireContext} from '../../store/context';
 
 const CreateStory2 = ({route}) => {
   const navigation = useNavigation();
+  const {saveStory} = useVampireContext();
   const {characterName} = route.params;
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
   const handleClose = () => {
-    navigation.goBack();
+    if (title.trim() || content.trim()) {
+      Alert.alert(
+        'Unsaved Changes',
+        'Are you sure you want to discard your story?',
+        [
+          {
+            text: 'Continue Writing',
+            style: 'cancel',
+          },
+          {
+            text: 'Discard',
+            style: 'destructive',
+            onPress: () => navigation.goBack(),
+          },
+        ],
+      );
+    } else {
+      navigation.goBack();
+    }
   };
 
-  const handleSave = () => {
-    // TODO: Implement save functionality
-    if (title.trim() && content.trim()) {
-      const story = {
-        title: title.trim(),
-        content: content.trim(),
-        characterName: characterName,
-        id: new Date().getTime().toString(),
-      };
-      // Save story logic here
-      console.log('Save story', story);
+  const handleSave = async () => {
+    if (!title.trim() || !content.trim()) {
+      Alert.alert('Error', 'Please enter both a title and content for your story.');
+      return;
+    }
+
+    const storyData = {
+      title: title.trim(),
+      content: content.trim(),
+      characterName,
+    };
+
+    const success = await saveStory(storyData);
+
+    if (success) {
+      Alert.alert('Success', 'Your story has been saved!', [
+        {
+          text: 'OK',
+          onPress: () => navigation.navigate('TabNavigator', {screen: 'Story'}),
+        },
+      ]);
+    } else {
+      Alert.alert('Error', 'Failed to save your story. Please try again.');
     }
   };
 
@@ -159,7 +192,7 @@ const styles = StyleSheet.create({
     padding: 12,
     color: '#fff',
     fontSize: 16,
-    minHeight: 220,
-    maxHeight: 300,
+    minHeight: 280,
+    maxHeight: 350,
   },
 });

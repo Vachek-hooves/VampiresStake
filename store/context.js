@@ -5,11 +5,14 @@ const VampireContext = createContext({});
 
 export function VampireProvider({children}) {
   const [characters, setCharacters] = useState([]);
+  const [stories, setStories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
 
   // Fetch existing characters when the app starts
   useEffect(() => {
     loadCharacters();
+    loadStories();
   }, []);
 
   const loadCharacters = async () => {
@@ -23,6 +26,17 @@ export function VampireProvider({children}) {
       console.error('Error loading characters:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const loadStories = async () => {
+    try {
+      const savedStories = await AsyncStorage.getItem('stories');
+      if (savedStories) {
+        setStories(JSON.parse(savedStories));
+      }
+    } catch (error) {
+      console.error('Error loading stories:', error);
     }
   };
 
@@ -58,17 +72,22 @@ export function VampireProvider({children}) {
     }
   };
 
-  const deleteCharacter = async (characterId) => {
+  const deleteCharacter = async characterId => {
     try {
       // Filter out the character to be deleted
-      const updatedCharacters = characters.filter(char => char.id !== characterId);
-      
+      const updatedCharacters = characters.filter(
+        char => char.id !== characterId,
+      );
+
       // Save updated list to AsyncStorage
-      await AsyncStorage.setItem('characters', JSON.stringify(updatedCharacters));
-      
+      await AsyncStorage.setItem(
+        'characters',
+        JSON.stringify(updatedCharacters),
+      );
+
       // Update state
       setCharacters(updatedCharacters);
-      
+
       return true;
     } catch (error) {
       console.error('Error deleting character:', error);
@@ -76,12 +95,33 @@ export function VampireProvider({children}) {
     }
   };
 
+  const saveStory = async storyData => {
+    try {
+      const newStory = {
+        ...storyData,
+        id: new Date().getTime().toString(),
+        createdAt: new Date().toISOString(),
+      };
+
+      const updatedStories = [...stories, newStory];
+      await AsyncStorage.setItem('stories', JSON.stringify(updatedStories));
+      setStories(updatedStories);
+      return true;
+    } catch (error) {
+      console.error('Error saving story:', error);
+      return false;
+    }
+  };
+
   const value = {
     characters,
+    stories,
     isLoading,
     saveCharacter,
     deleteCharacter,
+    saveStory,
     refreshCharacters: loadCharacters,
+    refreshStories: loadStories,
   };
 
   return (

@@ -1,14 +1,17 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { useNavigation } from '@react-navigation/native'
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import React from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {useVampireContext} from '../../store/context';
 
 const Story = () => {
-  const navigation = useNavigation()
+  const {stories} = useVampireContext();
+  const navigation = useNavigation();
+  console.log(stories);
 
   const handleStartWriting = () => {
     // Navigate to story creation screen
-    navigation.navigate('CreateStory')
-  }
+    navigation.navigate('CreateStory');
+  };
 
   return (
     <View style={styles.container}>
@@ -17,13 +20,13 @@ const Story = () => {
 
         <View style={styles.descriptionContainer}>
           <Text style={styles.description}>
-            Every great tale starts with a single idea. Bring your imagination to
-            life by weaving stories with the characters you've created.
+            Every great tale starts with a single idea. Bring your imagination
+            to life by weaving stories with the characters you've created.
           </Text>
 
           <Text style={styles.description}>
-            Dive into the shadows, craft your plots, and let your legends unfold.
-            Your next masterpiece is waiting to be written!
+            Dive into the shadows, craft your plots, and let your legends
+            unfold. Your next masterpiece is waiting to be written!
           </Text>
         </View>
 
@@ -34,10 +37,10 @@ const Story = () => {
         </TouchableOpacity>
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default Story
+export default Story;
 
 const styles = StyleSheet.create({
   container: {
@@ -83,4 +86,4 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontStyle: 'italic',
   },
-})
+});
