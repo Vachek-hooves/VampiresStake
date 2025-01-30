@@ -505,7 +505,7 @@ export default CharacterCreate;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a2634',
+    backgroundColor: '#142C38',
     padding: 20,
   },
   title: {
