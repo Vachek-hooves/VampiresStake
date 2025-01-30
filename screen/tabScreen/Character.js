@@ -5,6 +5,7 @@ const Character = ({navigation}) => {
   const handleCreateCharacter = () => {
     // Navigation to character creation will be implemented later
     // navigation.navigate('CreateCharacter')
+    navigation.navigate('CharacterCreate');
   };
 
   return (
