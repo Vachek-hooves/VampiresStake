@@ -94,6 +94,16 @@ const CharacterCreate = () => {
     }
   };
 
+  const handleClose = () => {
+    navigation.goBack();
+  };
+
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
   const renderStepOne = () => (
     <>
       <Text style={styles.title}>Let's bring your character to life!</Text>
@@ -498,6 +508,21 @@ const CharacterCreate = () => {
 
   return (
     <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        {currentStep > 1 ? (
+          <TouchableOpacity style={styles.headerButton} onPress={handleBack}>
+            <Text style={styles.headerButtonText}>←</Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.headerButtonPlaceholder} />
+        )}
+        <Text style={styles.headerTitle}>Create Character</Text>
+        <TouchableOpacity style={styles.headerButton} onPress={handleClose}>
+          <Text style={styles.headerButtonText}>✕</Text>
+        </TouchableOpacity>
+      </View>
+
       <ScrollView>
         <SafeAreaView>
           {currentStep === 1 && renderStepOne()}
@@ -626,5 +651,33 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '500',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 70,
+    paddingBottom: 10,
+  },
+  headerButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+  },
+  headerButtonText: {
+    color: '#fff',
+    fontSize: 20,
+  },
+  headerButtonPlaceholder: {
+    width: 40,
+  },
+  headerTitle: {
+    color: '#fff',
+    fontSize: 18,
+    fontStyle: 'italic',
   },
 });
