@@ -120,7 +120,7 @@ const PuzzleGame = ({route}) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.pauseButton}>
-        <Text style={styles.pauseButtonText}>Pause</Text>
+        {/* <Text style={styles.pauseButtonText}>Pause</Text> */}
       </TouchableOpacity>
 
       <View style={styles.puzzleContainer}>
@@ -176,17 +176,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#142C38',
+   
   },
   pauseButton: {
-    marginTop: 50,
+    marginTop: 80,
     marginBottom: 20,
     paddingVertical: 12,
     paddingHorizontal: 40,
     borderRadius: 25,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.3)',
+    // borderWidth: 1,
+    // borderColor: 'rgba(255,255,255,0.3)',
     alignSelf: 'center',
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    // backgroundColor: 'rgba(255,255,255,0.2)',
   },
   pauseButtonText: {
     color: '#fff',
@@ -198,6 +199,7 @@ const styles = StyleSheet.create({
     width: width,
     alignSelf: 'center',
     overflow: 'hidden',
+   
   },
   piece: {
     position: 'absolute',

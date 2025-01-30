@@ -31,23 +31,26 @@ const puzzles = [
     name: 'Piano',
     image: require('../../assets/puzzle/piano.png'),
   },
-  
 ];
 
 const GameLevels = () => {
   const navigation = useNavigation();
 
-  const handlePuzzleSelect = (puzzle) => {
+  const handlePuzzleSelect = puzzle => {
     navigation.navigate('PuzzleGame', {puzzle});
   };
 
-  const renderPuzzleCard = (puzzle) => (
+  const renderPuzzleCard = puzzle => (
     <TouchableOpacity
       key={puzzle.id}
       style={styles.puzzleCard}
-      onPress={() => handlePuzzleSelect(puzzle)}>
+      onPress={() => handlePuzzleSelect(puzzle)} >
       <View style={styles.imageContainer}>
-        <Image source={puzzle.image} style={styles.puzzleImage} blurRadius={0}/>
+        <Image
+          source={puzzle.image}
+          style={styles.puzzleImage}
+          blurRadius={100}
+        />
         {/* <BlurView
           style={styles.blurOverlay}
           blurType="dark"
@@ -66,21 +69,20 @@ const GameLevels = () => {
     //   source={require('../../assets/images/dark-bg.png')}
     //   style={styles.container}
     //   resizeMode="cover">
-      <View style={styles.container}>
-
-        <View style={styles.content}>
+    <View style={styles.container}>
+      <View style={styles.content}>
         <Text style={styles.title}>Choose Your Puzzle</Text>
 
-        <ScrollView 
+        <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}>
           <View style={styles.puzzlesGrid}>
             {puzzles.map(renderPuzzleCard)}
           </View>
+          <View style={{height: 100}}/>
         </ScrollView>
       </View>
-              </View>
-
+    </View>
   );
 };
 
@@ -110,13 +112,16 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   puzzlesGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    // flexDirection: 'row',
+    // flexWrap: 'wrap',
+    // justifyContent: 'space-between',
     gap: 20,
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   puzzleCard: {
-    width: CARD_WIDTH,
+    // width: CARD_WIDTH,
+    width: '90%',
     aspectRatio: 1,
     borderRadius: 12,
     overflow: 'hidden',
