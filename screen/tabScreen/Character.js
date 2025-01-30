@@ -7,12 +7,15 @@ const Character = ({navigation}) => {
   const handleCreateCharacter = () => {
     navigation.navigate('CharacterCreate');
   };
+  const handleCharacterPress = (character) => {
+    navigation.navigate('CharacterDetails', {character});
+  };
 
   const renderCharacterCard = (character) => (
     <TouchableOpacity 
       key={character.id} 
       style={styles.characterCard}
-      onPress={() => {/* Handle character selection */}}>
+      onPress={() => handleCharacterPress(character)}>
       <Image
         source={require('../../assets/icons/vampire.png')}
         style={styles.characterIcon}
