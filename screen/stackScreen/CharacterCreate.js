@@ -95,7 +95,22 @@ const CharacterCreate = () => {
   };
 
   const handleClose = () => {
-    navigation.goBack();
+    Alert.alert(
+      'Character Creation Incomplete',
+      "You haven't finished creating your character yet. Are you sure you want to exit? All progress will be lost",
+      [
+        {
+          text: 'Continue Editing',
+          style: 'cancel',
+        },
+        {
+          text: 'Exit Without Saving',
+          onPress: () => navigation.goBack(),
+          style: 'destructive',
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   const handleBack = () => {
