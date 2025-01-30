@@ -63,7 +63,8 @@ const Character = ({navigation}) => {
 
       <TouchableOpacity
         style={styles.deleteButton}
-        onPress={() => handleDeleteCharacter(character)}>
+        // onPress={() => handleDeleteCharacter(character)}
+        >
         <Image
           source={require('../../assets/icons/trash.png')}
           style={styles.deleteIcon}
