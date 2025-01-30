@@ -1,7 +1,9 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import React from 'react';
+import {useVampireContext} from '../../store/context';
 
 const Character = ({navigation}) => {
+  const {characters} = useVampireContext();
+  console.log(characters);
   const handleCreateCharacter = () => {
     // Navigation to character creation will be implemented later
     // navigation.navigate('CreateCharacter')

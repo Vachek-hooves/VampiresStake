@@ -1,11 +1,69 @@
-import React, {createContext, useState, useContext} from 'react';
+import React, {createContext, useState, useContext, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const VampireContext = createContext({});
 
 export function VampireProvider({children}) {
-  const [test, setTest] = useState('Context welcome you');
-  const value = {};
+  const [characters, setCharacters] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch existing characters when the app starts
+  useEffect(() => {
+    loadCharacters();
+  }, []);
+
+  const loadCharacters = async () => {
+    try {
+      setIsLoading(true);
+      const existingCharacters = await AsyncStorage.getItem('characters');
+      if (existingCharacters) {
+        setCharacters(JSON.parse(existingCharacters));
+      }
+    } catch (error) {
+      console.error('Error loading characters:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const saveCharacter = async characterData => {
+    try {
+      // Get existing characters
+      const existingCharacters = await AsyncStorage.getItem('characters');
+      let newCharacters = [];
+
+      if (existingCharacters) {
+        newCharacters = JSON.parse(existingCharacters);
+      }
+
+      // Add new character with unique ID
+      const newCharacter = {
+        id: Date.now().toString(),
+        ...characterData,
+        createdAt: new Date().toISOString(),
+      };
+
+      newCharacters.push(newCharacter);
+
+      // Save to AsyncStorage
+      await AsyncStorage.setItem('characters', JSON.stringify(newCharacters));
+
+      // Update state
+      setCharacters(newCharacters);
+
+      return true;
+    } catch (error) {
+      console.error('Error saving character:', error);
+      return false;
+    }
+  };
+
+  const value = {
+    characters,
+    isLoading,
+    saveCharacter,
+    refreshCharacters: loadCharacters, // Expose refresh function
+  };
 
   return (
     <VampireContext.Provider value={value}>{children}</VampireContext.Provider>

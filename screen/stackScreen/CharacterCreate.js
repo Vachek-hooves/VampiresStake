@@ -7,13 +7,17 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
+  Alert,
 } from 'react-native';
 import {useState} from 'react';
 import {CHARACTER} from '../../data/characterForm';
 import {useVampireContext} from '../../store/context';
+import {useNavigation} from '@react-navigation/native';
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const CharacterCreate = () => {
+  const navigation = useNavigation();
+  const {saveCharacter} = useVampireContext();
   const [currentStep, setCurrentStep] = useState(1);
   const [characterName, setCharacterName] = useState('');
   const [concept, setConcept] = useState('');
@@ -34,6 +38,49 @@ const CharacterCreate = () => {
 
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
+  };
+
+  const handleSaveCharacter = async () => {
+    const characterData = {
+      // Basic Information
+      name: characterName,
+      concept,
+      sire,
+
+      // Clan
+      clan: selectedClan,
+
+      // Appearance
+      appearance: {
+        hairStyle,
+        eyeColor,
+        uniqueMarks,
+      },
+
+      // Traits
+      traits: {
+        strength,
+        flaw,
+        motivation,
+      },
+
+      // Background
+      background: {
+        transformation,
+        hauntingMemory,
+      },
+    };
+    console.log(characterData);
+
+    const success = await saveCharacter(characterData);
+
+    if (success) {
+      // Navigate back to character list
+      navigation.goBack();
+    } else {
+      // You might want to show an error message here
+      Alert.alert('Error', 'Failed to save character. Please try again.');
+    }
   };
 
   const renderStepOne = () => (
@@ -432,9 +479,7 @@ const CharacterCreate = () => {
       {/* Save Button */}
       <TouchableOpacity
         style={[styles.nextButton, {marginTop: 'auto'}]}
-        onPress={() => {
-          /* Handle save */
-        }}>
+        onPress={handleSaveCharacter}>
         <Text style={styles.nextButtonText}>Save</Text>
       </TouchableOpacity>
     </>
