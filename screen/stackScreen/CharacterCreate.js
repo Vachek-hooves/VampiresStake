@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import {useState} from 'react';
 import {CHARACTER} from '../../data/characterForm';
@@ -140,13 +142,14 @@ const CharacterCreate = () => {
       </View>
 
       <Text style={styles.description}>
-        Every bloodline holds its secrets, strengths, and curses. The clan you 
-        choose will shape your abilities, alliances, and enemies in the nights to 
-        come. Long-press a clan to uncover its mysteries before making your choice
+        Every bloodline holds its secrets, strengths, and curses. The clan you
+        choose will shape your abilities, alliances, and enemies in the nights
+        to come. Long-press a clan to uncover its mysteries before making your
+        choice
       </Text>
 
       {/* Clan Selection */}
-      {CHARACTER.CLANS.map((clan) => (
+      {CHARACTER.CLANS.map(clan => (
         <TouchableOpacity
           key={clan.name}
           style={[
@@ -154,15 +157,16 @@ const CharacterCreate = () => {
             selectedClan === clan.name && styles.clanOptionSelected,
           ]}
           onPress={() => setSelectedClan(clan.name)}
-          onLongPress={() => {/* Show clan description modal */}}>
+          onLongPress={() => {
+            /* Show clan description modal */
+          }}>
           <View style={styles.radioContainer}>
-            <View style={[
-              styles.radioOuter,
-              selectedClan === clan.name && styles.radioOuterSelected
-            ]}>
-              {selectedClan === clan.name && (
-                <View style={styles.radioInner} />
-              )}
+            <View
+              style={[
+                styles.radioOuter,
+                selectedClan === clan.name && styles.radioOuterSelected,
+              ]}>
+              {selectedClan === clan.name && <View style={styles.radioInner} />}
             </View>
             <Text style={styles.clanName}>{clan.name}</Text>
           </View>
@@ -191,8 +195,8 @@ const CharacterCreate = () => {
       </View>
 
       <Text style={styles.description}>
-        Appearances can deceive, but they always leave a lasting impression. Describe how 
-        others perceive you in the shadows
+        Appearances can deceive, but they always leave a lasting impression.
+        Describe how others perceive you in the shadows
       </Text>
 
       {/* Hair Style Input */}
@@ -236,7 +240,9 @@ const CharacterCreate = () => {
       </View>
 
       {/* Unique Marks Input */}
-      <Text style={styles.label}>Do you bear any scars, tattoos, or unique marks?</Text>
+      <Text style={styles.label}>
+        Do you bear any scars, tattoos, or unique marks?
+      </Text>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -277,8 +283,8 @@ const CharacterCreate = () => {
       </View>
 
       <Text style={styles.description}>
-        Your character is more than their looks or their clan. Define their essence, 
-        strengths, and flaws that make them unique
+        Your character is more than their looks or their clan. Define their
+        essence, strengths, and flaws that make them unique
       </Text>
 
       {/* Greatest Strength Input */}
@@ -293,7 +299,9 @@ const CharacterCreate = () => {
         />
         <TouchableOpacity
           style={styles.randomButton}
-          onPress={() => setStrength(getRandomItem(CHARACTER.TRAITS.strengths))}>
+          onPress={() =>
+            setStrength(getRandomItem(CHARACTER.TRAITS.strengths))
+          }>
           <Image
             source={require('../../assets/icons/shuffle.png')}
             style={styles.shuffleIcon}
@@ -333,7 +341,9 @@ const CharacterCreate = () => {
         />
         <TouchableOpacity
           style={styles.randomButton}
-          onPress={() => setMotivation(getRandomItem(CHARACTER.TRAITS.motivations))}>
+          onPress={() =>
+            setMotivation(getRandomItem(CHARACTER.TRAITS.motivations))
+          }>
           <Image
             source={require('../../assets/icons/shuffle.png')}
             style={styles.shuffleIcon}
@@ -363,8 +373,8 @@ const CharacterCreate = () => {
       </View>
 
       <Text style={styles.description}>
-        Every vampire has a past that haunts them. Tell your story—how you became 
-        what you are, and what shaped your journey into the night
+        Every vampire has a past that haunts them. Tell your story—how you
+        became what you are, and what shaped your journey into the night
       </Text>
 
       {/* Transformation Story Input */}
@@ -381,7 +391,11 @@ const CharacterCreate = () => {
         />
         <TouchableOpacity
           style={styles.randomButton}
-          onPress={() => setTransformation(getRandomItem(CHARACTER.BACKGROUND.transformation))}>
+          onPress={() =>
+            setTransformation(
+              getRandomItem(CHARACTER.BACKGROUND.transformation),
+            )
+          }>
           <Image
             source={require('../../assets/icons/shuffle.png')}
             style={styles.shuffleIcon}
@@ -403,7 +417,11 @@ const CharacterCreate = () => {
         />
         <TouchableOpacity
           style={styles.randomButton}
-          onPress={() => setHauntingMemory(getRandomItem(CHARACTER.BACKGROUND.haunting_memories))}>
+          onPress={() =>
+            setHauntingMemory(
+              getRandomItem(CHARACTER.BACKGROUND.haunting_memories),
+            )
+          }>
           <Image
             source={require('../../assets/icons/shuffle.png')}
             style={styles.shuffleIcon}
@@ -412,9 +430,11 @@ const CharacterCreate = () => {
       </View>
 
       {/* Save Button */}
-      <TouchableOpacity 
-        style={[styles.nextButton, { marginTop: 'auto' }]} 
-        onPress={() => {/* Handle save */}}>
+      <TouchableOpacity
+        style={[styles.nextButton, {marginTop: 'auto'}]}
+        onPress={() => {
+          /* Handle save */
+        }}>
         <Text style={styles.nextButtonText}>Save</Text>
       </TouchableOpacity>
     </>
@@ -422,11 +442,15 @@ const CharacterCreate = () => {
 
   return (
     <View style={styles.container}>
-      {currentStep === 1 && renderStepOne()}
-      {currentStep === 2 && renderStepTwo()}
-      {currentStep === 3 && renderStepThree()}
-      {currentStep === 4 && renderStepFour()}
-      {currentStep === 5 && renderStepFive()}
+      <ScrollView>
+        <SafeAreaView>
+          {currentStep === 1 && renderStepOne()}
+          {currentStep === 2 && renderStepTwo()}
+          {currentStep === 3 && renderStepThree()}
+          {currentStep === 4 && renderStepFour()}
+          {currentStep === 5 && renderStepFive()}
+        </SafeAreaView>
+      </ScrollView>
     </View>
   );
 };
