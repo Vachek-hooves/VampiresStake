@@ -23,6 +23,8 @@ const CharacterCreate = () => {
   const [strength, setStrength] = useState('');
   const [flaw, setFlaw] = useState('');
   const [motivation, setMotivation] = useState('');
+  const [transformation, setTransformation] = useState('');
+  const [hauntingMemory, setHauntingMemory] = useState('');
 
   const getRandomItem = array => {
     return array[Math.floor(Math.random() * array.length)];
@@ -346,12 +348,85 @@ const CharacterCreate = () => {
     </>
   );
 
+  const renderStepFive = () => (
+    <>
+      <Text style={styles.title}>Let's bring your character to life!</Text>
+
+      {/* Progress Indicators */}
+      <View style={styles.progressContainer}>
+        {[...Array(5)].map((_, index) => (
+          <View
+            key={index}
+            style={[styles.progressDot, {opacity: index === 4 ? 1 : 0.3}]}
+          />
+        ))}
+      </View>
+
+      <Text style={styles.description}>
+        Every vampire has a past that haunts them. Tell your story—how you became 
+        what you are, and what shaped your journey into the night
+      </Text>
+
+      {/* Transformation Story Input */}
+      <Text style={styles.label}>How did you become a vampire?</Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={transformation}
+          onChangeText={setTransformation}
+          placeholder="Tell your transformation story..."
+          placeholderTextColor="#666"
+          multiline={true}
+          numberOfLines={3}
+        />
+        <TouchableOpacity
+          style={styles.randomButton}
+          onPress={() => setTransformation(getRandomItem(CHARACTER.BACKGROUND.transformation))}>
+          <Image
+            source={require('../../assets/icons/shuffle.png')}
+            style={styles.shuffleIcon}
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Haunting Memory Input */}
+      <Text style={styles.label}>What haunts you from your mortal life?</Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={hauntingMemory}
+          onChangeText={setHauntingMemory}
+          placeholder="Share your haunting memory..."
+          placeholderTextColor="#666"
+          multiline={true}
+          numberOfLines={3}
+        />
+        <TouchableOpacity
+          style={styles.randomButton}
+          onPress={() => setHauntingMemory(getRandomItem(CHARACTER.BACKGROUND.haunting_memories))}>
+          <Image
+            source={require('../../assets/icons/shuffle.png')}
+            style={styles.shuffleIcon}
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Save Button */}
+      <TouchableOpacity 
+        style={[styles.nextButton, { marginTop: 'auto' }]} 
+        onPress={() => {/* Handle save */}}>
+        <Text style={styles.nextButtonText}>Save</Text>
+      </TouchableOpacity>
+    </>
+  );
+
   return (
     <View style={styles.container}>
       {currentStep === 1 && renderStepOne()}
       {currentStep === 2 && renderStepTwo()}
       {currentStep === 3 && renderStepThree()}
       {currentStep === 4 && renderStepFour()}
+      {currentStep === 5 && renderStepFive()}
     </View>
   );
 };
