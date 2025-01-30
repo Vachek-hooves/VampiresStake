@@ -20,6 +20,9 @@ const CharacterCreate = () => {
   const [hairStyle, setHairStyle] = useState('');
   const [eyeColor, setEyeColor] = useState('');
   const [uniqueMarks, setUniqueMarks] = useState('');
+  const [strength, setStrength] = useState('');
+  const [flaw, setFlaw] = useState('');
+  const [motivation, setMotivation] = useState('');
 
   const getRandomItem = array => {
     return array[Math.floor(Math.random() * array.length)];
@@ -257,11 +260,98 @@ const CharacterCreate = () => {
     </>
   );
 
+  const renderStepFour = () => (
+    <>
+      <Text style={styles.title}>Let's bring your character to life!</Text>
+
+      {/* Progress Indicators */}
+      <View style={styles.progressContainer}>
+        {[...Array(5)].map((_, index) => (
+          <View
+            key={index}
+            style={[styles.progressDot, {opacity: index === 3 ? 1 : 0.3}]}
+          />
+        ))}
+      </View>
+
+      <Text style={styles.description}>
+        Your character is more than their looks or their clan. Define their essence, 
+        strengths, and flaws that make them unique
+      </Text>
+
+      {/* Greatest Strength Input */}
+      <Text style={styles.label}>What is your greatest strength?</Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={strength}
+          onChangeText={setStrength}
+          placeholder="Enter your strength..."
+          placeholderTextColor="#666"
+        />
+        <TouchableOpacity
+          style={styles.randomButton}
+          onPress={() => setStrength(getRandomItem(CHARACTER.TRAITS.strengths))}>
+          <Image
+            source={require('../../assets/icons/shuffle.png')}
+            style={styles.shuffleIcon}
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Deepest Flaw Input */}
+      <Text style={styles.label}>What is your deepest flaw?</Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={flaw}
+          onChangeText={setFlaw}
+          placeholder="Enter your flaw..."
+          placeholderTextColor="#666"
+        />
+        <TouchableOpacity
+          style={styles.randomButton}
+          onPress={() => setFlaw(getRandomItem(CHARACTER.TRAITS.flaws))}>
+          <Image
+            source={require('../../assets/icons/shuffle.png')}
+            style={styles.shuffleIcon}
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Motivation Input */}
+      <Text style={styles.label}>What drives your existence?</Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={motivation}
+          onChangeText={setMotivation}
+          placeholder="Enter your motivation..."
+          placeholderTextColor="#666"
+        />
+        <TouchableOpacity
+          style={styles.randomButton}
+          onPress={() => setMotivation(getRandomItem(CHARACTER.TRAITS.motivations))}>
+          <Image
+            source={require('../../assets/icons/shuffle.png')}
+            style={styles.shuffleIcon}
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Next Button */}
+      <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+        <Text style={styles.nextButtonText}>Next</Text>
+      </TouchableOpacity>
+    </>
+  );
+
   return (
     <View style={styles.container}>
       {currentStep === 1 && renderStepOne()}
       {currentStep === 2 && renderStepTwo()}
       {currentStep === 3 && renderStepThree()}
+      {currentStep === 4 && renderStepFour()}
     </View>
   );
 };
