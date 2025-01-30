@@ -6,6 +6,7 @@ import TabNavigator from './screen/tabNavigator/TabNavigator';
 import OnboardingScreen from './screen/stackScreen/OnboardingScreen';
 import CharacterCreate from './screen/stackScreen/CharacterCreate';
 import CharacterDetails from './screen/stackScreen/CharacterDetails';
+import CreateStory from './screen/stackScreen/CreateStory';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ function App() {
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
           <Stack.Screen name="CharacterCreate" component={CharacterCreate} />
           <Stack.Screen name="CharacterDetails" component={CharacterDetails} />
+          <Stack.Screen name="CreateStory" component={CreateStory} />
         </Stack.Navigator>
       </NavigationContainer>
     </VampireProvider>
