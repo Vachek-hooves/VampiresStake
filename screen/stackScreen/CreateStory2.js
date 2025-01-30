@@ -80,6 +80,7 @@ const CreateStory2 = ({route}) => {
               multiline
               textAlignVertical="top"
               color="#fff"
+              autoFocus={true}  
             />
           </View>
         </View>
@@ -158,6 +159,7 @@ const styles = StyleSheet.create({
     padding: 12,
     color: '#fff',
     fontSize: 16,
-    minHeight: 200,
+    minHeight: 220,
+    maxHeight: 300,
   },
 });
