@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('window');
@@ -53,45 +53,43 @@ const PuzzleGame = ({route}) => {
     return array;
   };
 
-  const panResponder = PanResponder.create({
+  const createPanResponder = (piece) => PanResponder.create({
     onStartShouldSetPanResponder: () => true,
-    onPanResponderGrant: (_, gesture) => {
-      const pieceIndex = Math.floor(gesture.y0 / PIECE_HEIGHT);
-      if (pieceIndex < pieces.length) {
-        setCurrentPiece(pieces[pieceIndex]);
-      }
+    onMoveShouldSetPanResponder: () => true,
+    onPanResponderGrant: () => {
+      setCurrentPiece(piece);
+      piece.y.setOffset(piece.y._value);
     },
     onPanResponderMove: (_, gesture) => {
-      if (currentPiece) {
-        const newPosition = gesture.moveY - PIECE_HEIGHT / 2;
-        currentPiece.y.setValue(newPosition);
-      }
+      piece.y.setValue(gesture.dy);
     },
     onPanResponderRelease: (_, gesture) => {
-      if (!currentPiece) return;
+      piece.y.flattenOffset();
+      
+      const startPosition = piece.currentPosition;
+      const endPosition = Math.round((piece.y._value) / PIECE_HEIGHT);
+      const boundedPosition = Math.max(0, Math.min(endPosition, PIECES_COUNT - 1));
 
-      const newPosition = Math.round(gesture.moveY / PIECE_HEIGHT);
-      const boundedPosition = Math.max(0, Math.min(newPosition, PIECES_COUNT - 1));
-      
-      // Update positions of all pieces
-      const newPieces = [...pieces];
-      const oldPosition = currentPiece.currentPosition;
-      
-      // Animate all affected pieces
-      newPieces.forEach(piece => {
-        if (piece.id === currentPiece.id) {
-          piece.currentPosition = boundedPosition;
+      // Update positions
+      const newPieces = pieces.map(p => {
+        if (p.id === piece.id) {
+          p.currentPosition = boundedPosition;
         } else if (
-          (boundedPosition <= piece.currentPosition && piece.currentPosition < oldPosition) ||
-          (oldPosition < piece.currentPosition && piece.currentPosition <= boundedPosition)
+          (boundedPosition <= p.currentPosition && p.currentPosition < startPosition) ||
+          (startPosition < p.currentPosition && p.currentPosition <= boundedPosition)
         ) {
-          piece.currentPosition += oldPosition < boundedPosition ? -1 : 1;
+          p.currentPosition += startPosition < boundedPosition ? -1 : 1;
         }
-        
-        Animated.spring(piece.y, {
-          toValue: piece.currentPosition * PIECE_HEIGHT,
+
+        // Animate to new position
+        Animated.spring(p.y, {
+          toValue: p.currentPosition * PIECE_HEIGHT,
           useNativeDriver: true,
+          friction: 7,
+          tension: 40,
         }).start();
+
+        return p;
       });
 
       setPieces(newPieces);
@@ -115,15 +113,16 @@ const PuzzleGame = ({route}) => {
         <Text style={styles.pauseButtonText}>Pause</Text>
       </TouchableOpacity>
 
-      <View style={styles.puzzleContainer} {...panResponder.panHandlers}>
+      <View style={styles.puzzleContainer}>
         {pieces.map((piece) => (
           <Animated.View
             key={piece.id}
+            {...createPanResponder(piece).panHandlers}
             style={[
               styles.piece,
               {
                 transform: [{translateY: piece.y}],
-                zIndex: currentPiece?.id === piece.id ? 1 : 0,
+                zIndex: currentPiece?.id === piece.id ? 999 : 1,
               },
             ]}>
             <Image
