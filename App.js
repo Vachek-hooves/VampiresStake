@@ -10,7 +10,7 @@ function App() {
       <NavigationContainer >
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen name="Intro" component={IntroScreen} />
-          <Stack.Screen name="Tab" component={TabNavigator} />
+          <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
     </VampireProvider>
