@@ -7,10 +7,11 @@ import {
   Dimensions,
   TouchableOpacity,
   Text,
-  Modal,
+  Platform,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
+import Share from 'react-native-share';
 
 const {width, height} = Dimensions.get('window');
 const PIECES_COUNT = 12;
@@ -23,7 +24,6 @@ const PuzzleGame = ({route}) => {
   const [pieces, setPieces] = useState([]);
   const [currentPiece, setCurrentPiece] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     initializePuzzle();
@@ -106,22 +106,41 @@ const PuzzleGame = ({route}) => {
       piece => piece.currentPosition === piece.correctPosition
     );
     
-    if (isComplete && !showSuccessModal) {
+    if (isComplete) {
       setIsComplete(true);
-      setShowSuccessModal(true);
     }
   };
 
-  const handleContinue = () => {
-    setShowSuccessModal(false);
-    navigation.goBack();
+  const handleShare = async () => {
+    try {
+      const shareOptions = {
+        title: 'Share Puzzle',
+        url: Platform.OS === 'ios' ? 
+          `file://${puzzle.image}` : 
+          puzzle.image,
+        message: 'Check out this amazing puzzle I completed!',
+      };
+      await Share.open(shareOptions);
+    } catch (error) {
+      console.log('Error sharing:', error);
+    }
+  };
+
+  const handleMainMenu = () => {
+    navigation.navigate('TabNavigator',{screen: 'Game'});
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.pauseButton}>
-        {/* <Text style={styles.pauseButtonText}>Pause</Text> */}
-      </TouchableOpacity>
+      {/* Top buttons */}
+      <View style={[isComplete ? {height: '5%'} : {height: '10%'}]}/>
+      {isComplete && (
+        <View style={styles.topButtons}>
+          {/* <TouchableOpacity style={styles.actionButton} onPress={handleShare}>
+            <Text style={styles.actionButtonText}>Share →</Text>
+          </TouchableOpacity> */}
+        </View>
+      )}
 
       <View style={styles.puzzleContainer}>
         {pieces.map((piece) => (
@@ -149,25 +168,14 @@ const PuzzleGame = ({route}) => {
         ))}
       </View>
 
-      {/* Success Modal */}
-      <Modal
-        transparent={true}
-        visible={showSuccessModal}
-        animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.congratsText}>Congratulations!</Text>
-            <Text style={styles.modalText}>
-              You've successfully completed the puzzle!
-            </Text>
-            <TouchableOpacity
-              style={styles.continueButton}
-              onPress={handleContinue}>
-              <Text style={styles.continueButtonText}>Continue</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      {/* Main Menu button */}
+      {isComplete && (
+        <TouchableOpacity 
+          style={styles.mainMenuButton}
+          onPress={handleMainMenu}>
+          <Text style={styles.mainMenuButtonText}>Main Menu</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -176,30 +184,33 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#142C38',
-   
   },
-  pauseButton: {
-    marginTop: 80,
-    marginBottom: 20,
+  topButtons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    // paddingVertical: 20,
+    width: '100%',
+    paddingBottom: 20,
+  },
+  actionButton: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
     paddingVertical: 12,
-    paddingHorizontal: 40,
+    paddingHorizontal: 20,
     borderRadius: 25,
-    // borderWidth: 1,
-    // borderColor: 'rgba(255,255,255,0.3)',
-    alignSelf: 'center',
-    // backgroundColor: 'rgba(255,255,255,0.2)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.3)',
   },
-  pauseButtonText: {
+  actionButtonText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 16,
     fontStyle: 'italic',
   },
   puzzleContainer: {
     height: PUZZLE_HEIGHT,
     width: width,
-    alignSelf: 'center',
+    // alignSelf: 'center',
     overflow: 'hidden',
-   
   },
   piece: {
     position: 'absolute',
@@ -212,43 +223,18 @@ const styles = StyleSheet.create({
     position: 'absolute',
     resizeMode: 'cover',
   },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: '#142C38',
-    padding: 30,
-    borderRadius: 15,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.3)',
-    width: '80%',
-  },
-  congratsText: {
-    color: '#fff',
-    fontSize: 28,
-    fontWeight: '600',
-    marginBottom: 15,
-    fontStyle: 'italic',
-  },
-  modalText: {
-    color: '#fff',
-    fontSize: 18,
-    textAlign: 'center',
-    marginBottom: 25,
-  },
-  continueButton: {
+  mainMenuButton: {
     backgroundColor: 'rgba(255,255,255,0.2)',
-    paddingVertical: 12,
-    paddingHorizontal: 30,
+    paddingVertical: 15,
+    paddingHorizontal: 40,
     borderRadius: 25,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.3)',
+    position: 'absolute',
+    bottom: 40,
+    alignSelf: 'center',
   },
-  continueButtonText: {
+  mainMenuButtonText: {
     color: '#fff',
     fontSize: 18,
     fontStyle: 'italic',

@@ -39,7 +39,7 @@ const Settings = () => {
 
   const handleTermsOfUse = () => {
     // Replace with your actual terms of use URL
-    Linking.openURL('https://your-terms-of-use-url.com');
+    Linking.openURL('https://www.termsfeed.com/live/90094df1-1805-4ca2-a9ec-cf2b88144433');
   };
 
   return (
@@ -71,7 +71,7 @@ const Settings = () => {
 
         {/* Terms of Use */}
         <TouchableOpacity style={styles.settingRow} onPress={handleTermsOfUse}>
-          <Text style={styles.settingText}>Terms of Use</Text>
+          <Text style={styles.settingText}>Privacy Policy</Text>
         </TouchableOpacity>
       </View>
     </View>
