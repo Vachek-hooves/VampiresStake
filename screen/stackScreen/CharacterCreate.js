@@ -15,6 +15,48 @@ import {useVampireContext} from '../../store/context';
 import {useNavigation} from '@react-navigation/native';
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+const Header = ({ currentStep, onPreviousStep }) => {
+  const navigation = useNavigation();
+
+  const handleClose = () => {
+    Alert.alert(
+      'Character Creation Incomplete',
+      "You haven't finished creating your character yet. Are you sure you want to exit? All progress will be lost",
+      [
+        {
+          text: 'Continue Editing',
+          style: 'cancel',
+        },
+        {
+          text: 'Exit Without Saving',
+          style: 'destructive',
+          onPress: () => navigation.goBack(),
+        },
+      ],
+    );
+  };
+
+  return (
+    <View style={styles.header}>
+      {currentStep > 1 ? (
+        <TouchableOpacity
+          style={styles.headerButton}
+          onPress={onPreviousStep}>
+          <Text style={styles.headerButtonText}>← Previous step</Text>
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.headerButtonPlaceholder} />
+      )}
+      
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={handleClose}>
+        <Text style={styles.closeButtonText}>✕</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 const CharacterCreate = () => {
   const navigation = useNavigation();
   const {saveCharacter} = useVampireContext();
@@ -38,6 +80,12 @@ const CharacterCreate = () => {
 
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
+  };
+
+  const handlePreviousStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
   };
 
   const handleSaveCharacter = async () => {
@@ -488,7 +536,11 @@ const CharacterCreate = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <SafeAreaView>
+        <SafeAreaView style={styles.safeArea}>
+          <Header 
+            currentStep={currentStep} 
+            onPreviousStep={handlePreviousStep} 
+          />
           {currentStep === 1 && renderStepOne()}
           {currentStep === 2 && renderStepTwo()}
           {currentStep === 3 && renderStepThree()}
@@ -613,6 +665,39 @@ const styles = StyleSheet.create({
   clanName: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: '500',
+  },
+  safeArea: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  headerButton: {
+    padding: 8,
+  },
+  headerButtonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  headerButtonPlaceholder: {
+    width: 100, // Approximate width of "Previous step" button
+  },
+  closeButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: '#fff',
+    fontSize: 18,
     fontWeight: '500',
   },
 });
