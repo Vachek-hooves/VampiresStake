@@ -11,7 +11,7 @@ import {useVampireContext} from '../../store/context';
 
 const Character = ({navigation}) => {
   const {characters, deleteCharacter} = useVampireContext();
-  console.log(characters);
+  // console.log(characters);
 
   const handleCreateCharacter = () => {
     navigation.navigate('CharacterCreate');

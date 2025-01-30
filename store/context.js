@@ -1,13 +1,16 @@
 import React, {createContext, useState, useContext, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const VampireContext = createContext({});
+const VampireContext = createContext({
+  isMusicEnable: () => {},
+  setIsMusicEnable: () => {},
+});
 
 export function VampireProvider({children}) {
   const [characters, setCharacters] = useState([]);
   const [stories, setStories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [isMusicEnable, setIsMusicEnable] = useState(true);
 
   // Fetch existing characters when the app starts
   useEffect(() => {
@@ -122,6 +125,8 @@ export function VampireProvider({children}) {
     saveStory,
     refreshCharacters: loadCharacters,
     refreshStories: loadStories,
+    isMusicEnable,
+    setIsMusicEnable,
   };
 
   return (

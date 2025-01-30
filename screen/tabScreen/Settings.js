@@ -8,19 +8,22 @@ import {
   Linking,
   Image,
 } from 'react-native';
-import React, {useState} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useVampireContext} from '../../store/context';
+import {
+  playBackgroundMusic,
+  pauseBackgroundMusic,
+} from '../../SoundSetup/SoundSetUp';
 
 const Settings = () => {
-  const [isMusicEnabled, setIsMusicEnabled] = useState(false);
+  const {isMusicEnable, setIsMusicEnable} = useVampireContext();
 
-  const toggleMusic = async value => {
-    setIsMusicEnabled(value);
-    try {
-      await AsyncStorage.setItem('musicEnabled', JSON.stringify(value));
-      // TODO: Implement actual music control logic
-    } catch (error) {
-      console.error('Error saving music setting:', error);
+  const handleSoundToggle = async value => {
+    // setSoundEnabled(previousState => !previousState);
+    setIsMusicEnable(value);
+    if (value) {
+      await playBackgroundMusic();
+    } else {
+      pauseBackgroundMusic();
     }
   };
 
@@ -39,7 +42,9 @@ const Settings = () => {
 
   const handleTermsOfUse = () => {
     // Replace with your actual terms of use URL
-    Linking.openURL('https://www.termsfeed.com/live/90094df1-1805-4ca2-a9ec-cf2b88144433');
+    Linking.openURL(
+      'https://www.termsfeed.com/live/90094df1-1805-4ca2-a9ec-cf2b88144433',
+    );
   };
 
   return (
@@ -51,10 +56,10 @@ const Settings = () => {
         <View style={styles.settingRow}>
           <Text style={styles.settingText}>Music</Text>
           <Switch
-            value={isMusicEnabled}
-            onValueChange={toggleMusic}
+            value={isMusicEnable}
+            onValueChange={handleSoundToggle}
             trackColor={{false: '#767577', true: '#0084ff'}}
-            thumbColor={isMusicEnabled ? '#fff' : '#f4f3f4'}
+            thumbColor={isMusicEnable ? '#fff' : '#f4f3f4'}
             ios_backgroundColor="#3e3e3e"
           />
         </View>
