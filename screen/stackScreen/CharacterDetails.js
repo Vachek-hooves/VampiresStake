@@ -40,12 +40,17 @@ const CharacterDetails = ({ route }) => {
           {/* Clan */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Clan</Text>
-            <Text style={styles.sectionText}>{character.clan}</Text>
+            <Text style={styles.sectionText}>{character.clan.name}</Text>
             <Text style={styles.clanDescription}>
-              Masters of blood magic, wielding power through ancient rituals and arcane secrets. 
-              Their intellect and ruthlessness make them formidable, though their pursuit of 
-              knowledge can lead to isolation.
+              {character.clan.description}
             </Text>
+            <View style={styles.traitsContainer}>
+              {character.clan.traits.map((trait, index) => (
+                <Text key={index} style={styles.traitText}>
+                  {trait}
+                </Text>
+              ))}
+            </View>
           </View>
 
           {/* Appearance */}
@@ -59,16 +64,31 @@ const CharacterDetails = ({ route }) => {
           {/* Character Traits */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Character Traits</Text>
-            <Text style={styles.sectionText}>{character.traits.strength}</Text>
-            <Text style={styles.sectionText}>{character.traits.flaw}</Text>
-            <Text style={styles.sectionText}>{character.traits.motivation}</Text>
+            <Text style={styles.sectionText}>
+              <Text style={styles.traitLabel}>Greatest Strength: </Text>
+              {character.personalTraits.strength}
+            </Text>
+            <Text style={styles.sectionText}>
+              <Text style={styles.traitLabel}>Deepest Flaw: </Text>
+              {character.personalTraits.flaw}
+            </Text>
+            <Text style={styles.sectionText}>
+              <Text style={styles.traitLabel}>Motivation: </Text>
+              {character.personalTraits.motivation}
+            </Text>
           </View>
 
           {/* Background */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Background</Text>
-            <Text style={styles.sectionText}>{character.background.transformation}</Text>
-            <Text style={styles.sectionText}>{character.background.hauntingMemory}</Text>
+            <Text style={styles.sectionText}>
+              <Text style={styles.traitLabel}>Transformation: </Text>
+              {character.background.transformation}
+            </Text>
+            <Text style={styles.sectionText}>
+              <Text style={styles.traitLabel}>Haunting Memory: </Text>
+              {character.background.hauntingMemory}
+            </Text>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -154,5 +174,24 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.7)',
     marginTop: 8,
     lineHeight: 20,
+  },
+  traitsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 10,
+    gap: 8,
+  },
+  traitText: {
+    color: '#fff',
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    fontSize: 14,
+    overflow: 'hidden',
+  },
+  traitLabel: {
+    color: 'rgba(255,255,255,0.7)',
+    fontStyle: 'italic',
   },
 })

@@ -15,48 +15,6 @@ import {useVampireContext} from '../../store/context';
 import {useNavigation} from '@react-navigation/native';
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const Header = ({ currentStep, onPreviousStep }) => {
-  const navigation = useNavigation();
-
-  const handleClose = () => {
-    Alert.alert(
-      'Character Creation Incomplete',
-      "You haven't finished creating your character yet. Are you sure you want to exit? All progress will be lost",
-      [
-        {
-          text: 'Continue Editing',
-          style: 'cancel',
-        },
-        {
-          text: 'Exit Without Saving',
-          style: 'destructive',
-          onPress: () => navigation.goBack(),
-        },
-      ],
-    );
-  };
-
-  return (
-    <View style={styles.header}>
-      {currentStep > 1 ? (
-        <TouchableOpacity
-          style={styles.headerButton}
-          onPress={onPreviousStep}>
-          <Text style={styles.headerButtonText}>← Previous step</Text>
-        </TouchableOpacity>
-      ) : (
-        <View style={styles.headerButtonPlaceholder} />
-      )}
-      
-      <TouchableOpacity
-        style={styles.closeButton}
-        onPress={handleClose}>
-        <Text style={styles.closeButtonText}>✕</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
 const CharacterCreate = () => {
   const navigation = useNavigation();
   const {saveCharacter} = useVampireContext();
@@ -65,6 +23,8 @@ const CharacterCreate = () => {
   const [concept, setConcept] = useState('');
   const [sire, setSire] = useState('');
   const [selectedClan, setSelectedClan] = useState('Ventrue'); // Default selection
+  const [clanDescription, setClanDescription] = useState(CHARACTER.CLANS[0].description); // Add this new state
+  const [clanTraits, setClanTraits] = useState(CHARACTER.CLANS[0].traits); // Add this new state
   const [hairStyle, setHairStyle] = useState('');
   const [eyeColor, setEyeColor] = useState('');
   const [uniqueMarks, setUniqueMarks] = useState('');
@@ -82,10 +42,10 @@ const CharacterCreate = () => {
     setCurrentStep(currentStep + 1);
   };
 
-  const handlePreviousStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
+  const handleClanSelection = (clan) => {
+    setSelectedClan(clan.name);
+    setClanDescription(clan.description);
+    setClanTraits(clan.traits);
   };
 
   const handleSaveCharacter = async () => {
@@ -95,8 +55,12 @@ const CharacterCreate = () => {
       concept,
       sire,
 
-      // Clan
-      clan: selectedClan,
+      // Clan information including traits
+      clan: {
+        name: selectedClan,
+        description: clanDescription,
+        traits: clanTraits,
+      },
 
       // Appearance
       appearance: {
@@ -105,8 +69,8 @@ const CharacterCreate = () => {
         uniqueMarks,
       },
 
-      // Traits
-      traits: {
+      // Personal character traits (from step 4)
+      personalTraits: {
         strength,
         flaw,
         motivation,
@@ -118,15 +82,12 @@ const CharacterCreate = () => {
         hauntingMemory,
       },
     };
-    console.log(characterData);
 
     const success = await saveCharacter(characterData);
 
     if (success) {
-      // Navigate back to character list
       navigation.goBack();
     } else {
-      // You might want to show an error message here
       Alert.alert('Error', 'Failed to save character. Please try again.');
     }
   };
@@ -251,7 +212,7 @@ const CharacterCreate = () => {
             styles.clanOption,
             selectedClan === clan.name && styles.clanOptionSelected,
           ]}
-          onPress={() => setSelectedClan(clan.name)}
+          onPress={() => handleClanSelection(clan)}
           onLongPress={() => {
             /* Show clan description modal */
           }}>
@@ -536,11 +497,7 @@ const CharacterCreate = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <SafeAreaView style={styles.safeArea}>
-          <Header 
-            currentStep={currentStep} 
-            onPreviousStep={handlePreviousStep} 
-          />
+        <SafeAreaView>
           {currentStep === 1 && renderStepOne()}
           {currentStep === 2 && renderStepTwo()}
           {currentStep === 3 && renderStepThree()}
@@ -665,39 +622,6 @@ const styles = StyleSheet.create({
   clanName: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '500',
-  },
-  safeArea: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  headerButton: {
-    padding: 8,
-  },
-  headerButtonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  headerButtonPlaceholder: {
-    width: 100, // Approximate width of "Previous step" button
-  },
-  closeButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  closeButtonText: {
-    color: '#fff',
-    fontSize: 18,
     fontWeight: '500',
   },
 });

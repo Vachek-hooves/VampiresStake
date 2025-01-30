@@ -1,19 +1,27 @@
-import {StyleSheet, Text, View, TouchableOpacity, Image, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from 'react-native';
 import {useVampireContext} from '../../store/context';
 
 const Character = ({navigation}) => {
   const {characters} = useVampireContext();
+  console.log(characters);
 
   const handleCreateCharacter = () => {
     navigation.navigate('CharacterCreate');
   };
-  const handleCharacterPress = (character) => {
+  const handleCharacterPress = character => {
     navigation.navigate('CharacterDetails', {character});
   };
 
-  const renderCharacterCard = (character) => (
-    <TouchableOpacity 
-      key={character.id} 
+  const renderCharacterCard = character => (
+    <TouchableOpacity
+      key={character.id}
       style={styles.characterCard}
       onPress={() => handleCharacterPress(character)}>
       <Image
@@ -31,7 +39,9 @@ const Character = ({navigation}) => {
     <View style={styles.container}>
       <Text style={styles.title}>Let's bring your character to life!</Text>
 
-      <TouchableOpacity style={styles.createButton} onPress={handleCreateCharacter}>
+      <TouchableOpacity
+        style={styles.createButton}
+        onPress={handleCreateCharacter}>
         <Text style={styles.createButtonText}>Create Character</Text>
       </TouchableOpacity>
 
@@ -40,8 +50,8 @@ const Character = ({navigation}) => {
           <Text style={styles.description}>
             It looks like you don't have any characters yet. Start creating your
             unique hero or villain by clicking the button above. Customize every
-            detail, from their appearance to their story. Your imagination is the
-            only limit!
+            detail, from their appearance to their story. Your imagination is
+            the only limit!
           </Text>
         </View>
       ) : (
