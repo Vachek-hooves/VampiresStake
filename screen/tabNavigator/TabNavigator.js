@@ -4,6 +4,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Character from '../tabScreen/Character';
 import Story from '../tabScreen/Story';
 import AllStories from '../tabScreen/AllStories';
+import Settings from '../tabScreen/Settings';
 
 const Tab = createBottomTabNavigator();
 
@@ -13,6 +14,7 @@ const TabNavigator = () => {
       <Tab.Screen name="Character" component={Character} />
       <Tab.Screen name="Story" component={Story} />
       <Tab.Screen name="AllStories" component={AllStories} />
+      <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
   );
 };
