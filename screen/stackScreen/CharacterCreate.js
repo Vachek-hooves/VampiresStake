@@ -12,16 +12,22 @@ import {useVampireContext} from '../../store/context';
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const CharacterCreate = () => {
+  const [currentStep, setCurrentStep] = useState(1);
   const [characterName, setCharacterName] = useState('');
   const [concept, setConcept] = useState('');
   const [sire, setSire] = useState('');
+  const [selectedClan, setSelectedClan] = useState('Ventrue'); // Default selection
 
   const getRandomItem = array => {
     return array[Math.floor(Math.random() * array.length)];
   };
 
-  return (
-    <View style={styles.container}>
+  const handleNext = () => {
+    setCurrentStep(currentStep + 1);
+  };
+
+  const renderStepOne = () => (
+    <>
       <Text style={styles.title}>Let's bring your character to life!</Text>
 
       {/* Progress Indicators */}
@@ -105,9 +111,67 @@ const CharacterCreate = () => {
       </View>
 
       {/* Next Button */}
-      <TouchableOpacity style={styles.nextButton}>
+      <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
         <Text style={styles.nextButtonText}>Next</Text>
       </TouchableOpacity>
+    </>
+  );
+
+  const renderStepTwo = () => (
+    <>
+      <Text style={styles.title}>Let's bring your character to life!</Text>
+
+      {/* Progress Indicators */}
+      <View style={styles.progressContainer}>
+        {[...Array(5)].map((_, index) => (
+          <View
+            key={index}
+            style={[styles.progressDot, {opacity: index === 1 ? 1 : 0.3}]}
+          />
+        ))}
+      </View>
+
+      <Text style={styles.description}>
+        Every bloodline holds its secrets, strengths, and curses. The clan you 
+        choose will shape your abilities, alliances, and enemies in the nights to 
+        come. Long-press a clan to uncover its mysteries before making your choice
+      </Text>
+
+      {/* Clan Selection */}
+      {CHARACTER.CLANS.map((clan) => (
+        <TouchableOpacity
+          key={clan.name}
+          style={[
+            styles.clanOption,
+            selectedClan === clan.name && styles.clanOptionSelected,
+          ]}
+          onPress={() => setSelectedClan(clan.name)}
+          onLongPress={() => {/* Show clan description modal */}}>
+          <View style={styles.radioContainer}>
+            <View style={[
+              styles.radioOuter,
+              selectedClan === clan.name && styles.radioOuterSelected
+            ]}>
+              {selectedClan === clan.name && (
+                <View style={styles.radioInner} />
+              )}
+            </View>
+            <Text style={styles.clanName}>{clan.name}</Text>
+          </View>
+        </TouchableOpacity>
+      ))}
+
+      {/* Next Button */}
+      <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+        <Text style={styles.nextButtonText}>Next</Text>
+      </TouchableOpacity>
+    </>
+  );
+
+  return (
+    <View style={styles.container}>
+      {currentStep === 1 && renderStepOne()}
+      {currentStep === 2 && renderStepTwo()}
     </View>
   );
 };
@@ -189,5 +253,42 @@ const styles = StyleSheet.create({
   shuffleIcon: {
     width: 32,
     height: 32,
+  },
+  clanOption: {
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    borderRadius: 25,
+    padding: 15,
+    marginBottom: 10,
+  },
+  clanOptionSelected: {
+    backgroundColor: 'rgba(255,255,255,0.1)',
+  },
+  radioContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  radioOuter: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#fff',
+    marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  radioOuterSelected: {
+    borderColor: '#0084ff',
+  },
+  radioInner: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#0084ff',
+  },
+  clanName: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '500',
   },
 });
