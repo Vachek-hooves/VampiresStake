@@ -1,14 +1,18 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import {StyleSheet, Text, View} from 'react-native';
+import React from 'react';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Character from '../tabScreen/Character';
+
+const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => {
   return (
-    <View>
-      <Text>TabNavigator</Text>
-    </View>
-  )
-}
+    <Tab.Navigator screenOptions={{headerShown: false}}>
+      <Tab.Screen name="Character" component={Character} />
+    </Tab.Navigator>
+  );
+};
 
-export default TabNavigator
+export default TabNavigator;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
