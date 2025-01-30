@@ -14,8 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 const CreateStory = () => {
   const navigation = useNavigation();
   const {characters} = useVampireContext();
-  const [selectedCharacter, setSelectedCharacter] = useState(null);
-  const [customCharacter, setCustomCharacter] = useState('');
+  const [characterName, setCharacterName] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleClose = () => {
@@ -23,11 +22,16 @@ const CreateStory = () => {
   };
 
   const handleNext = () => {
-    // Handle next step
+    if (characterName.trim()) {
+      navigation.navigate('CreateStory2', {
+        characterName: characterName.trim(),
+      });
+    }
+  };
 
-    navigation.navigate('CreateStory2', {
-      character: selectedCharacter,
-    });
+  const handleSelectCharacter = (character) => {
+    setCharacterName(character.name);
+    setIsDropdownOpen(false);
   };
 
   return (
@@ -46,7 +50,7 @@ const CreateStory = () => {
             style={styles.selectorButton}
             onPress={() => setIsDropdownOpen(!isDropdownOpen)}>
             <Text style={styles.selectorText}>
-              {selectedCharacter?.name || 'Select a character'}
+              {characterName || 'Select a character'}
             </Text>
             <Image
               source={require('../../assets/icons/chevron-down.png')}
@@ -64,10 +68,7 @@ const CreateStory = () => {
                 <TouchableOpacity
                   key={character.id}
                   style={styles.dropdownItem}
-                  onPress={() => {
-                    setSelectedCharacter(character);
-                    setIsDropdownOpen(false);
-                  }}>
+                  onPress={() => handleSelectCharacter(character)}>
                   <Text style={styles.dropdownText}>{character.name}</Text>
                 </TouchableOpacity>
               ))}
@@ -78,19 +79,22 @@ const CreateStory = () => {
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
-              value={customCharacter}
-              onChangeText={setCustomCharacter}
+              value={characterName}
+              onChangeText={setCharacterName}
               placeholder="Or type a custom name..."
               placeholderTextColor="rgba(255,255,255,0.5)"
               color="#fff"
             />
-            <TouchableOpacity style={styles.addButton}>
-              <Text style={styles.addButtonText}>+</Text>
-            </TouchableOpacity>
           </View>
 
           {/* Next Button */}
-          <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+          <TouchableOpacity 
+            style={[
+              styles.nextButton,
+              !characterName.trim() && styles.nextButtonDisabled,
+            ]} 
+            onPress={handleNext}
+            disabled={!characterName.trim()}>
             <Text style={styles.nextButtonText}>Next</Text>
           </TouchableOpacity>
         </View>
@@ -187,19 +191,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
-  addButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#0084ff',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  addButtonText: {
-    color: '#fff',
-    fontSize: 24,
-    fontWeight: '500',
-  },
   nextButton: {
     backgroundColor: 'rgba(255,255,255,0.2)',
     padding: 15,
@@ -210,6 +201,9 @@ const styles = StyleSheet.create({
     right: 20,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.3)',
+  },
+  nextButtonDisabled: {
+    opacity: 0.5,
   },
   nextButtonText: {
     color: '#fff',
