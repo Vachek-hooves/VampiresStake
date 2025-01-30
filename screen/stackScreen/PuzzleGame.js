@@ -13,7 +13,8 @@ import {useNavigation} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('window');
 const PIECES_COUNT = 12;
-const PIECE_HEIGHT = height * 0.5 / PIECES_COUNT; // 50% of screen height for puzzle
+const PUZZLE_HEIGHT = height * 0.7;
+const PIECE_HEIGHT = PUZZLE_HEIGHT / PIECES_COUNT;
 
 const PuzzleGame = ({route}) => {
   const navigation = useNavigation();
@@ -130,7 +131,7 @@ const PuzzleGame = ({route}) => {
               style={[
                 styles.pieceImage,
                 {
-                  height: height * 0.5,
+                  height: PUZZLE_HEIGHT,
                   top: -piece.correctPosition * PIECE_HEIGHT,
                 },
               ]}
@@ -164,7 +165,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   puzzleContainer: {
-    height: height * 0.5,
+    height: PUZZLE_HEIGHT,
     width: width,
     alignSelf: 'center',
     overflow: 'hidden',
