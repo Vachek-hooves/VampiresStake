@@ -24,6 +24,10 @@ const CreateStory = () => {
 
   const handleNext = () => {
     // Handle next step
+
+    navigation.navigate('CreateStory2', {
+      character: selectedCharacter,
+    });
   };
 
   return (
