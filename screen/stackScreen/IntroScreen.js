@@ -7,7 +7,7 @@ const IntroScreen = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.replace('TabNavigator')
+      navigation.replace('OnboardingScreen')
     }, 2000)
 
     return () => clearTimeout(timer)
@@ -36,9 +36,10 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingBottom: 100,
   },
   title: {
     fontSize: 46,

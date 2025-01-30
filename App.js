@@ -3,13 +3,17 @@ import {NavigationContainer} from '@react-navigation/native';
 import {VampireProvider} from './store/context';
 import IntroScreen from './screen/stackScreen/IntroScreen';
 import TabNavigator from './screen/tabNavigator/TabNavigator';
+import OnboardingScreen from './screen/stackScreen/OnboardingScreen';
+
 const Stack = createNativeStackNavigator();
+
 function App() {
   return (
     <VampireProvider>
-      <NavigationContainer >
+      <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen name="Intro" component={IntroScreen} />
+          <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
