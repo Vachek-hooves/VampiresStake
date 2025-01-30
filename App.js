@@ -8,6 +8,7 @@ import CharacterCreate from './screen/stackScreen/CharacterCreate';
 import CharacterDetails from './screen/stackScreen/CharacterDetails';
 import CreateStory from './screen/stackScreen/CreateStory';
 import CreateStory2 from './screen/stackScreen/CreateStory2';
+import ScaryStoryDetails from './screen/stackScreen/ScaryStoryDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +24,10 @@ function App() {
           <Stack.Screen name="CharacterDetails" component={CharacterDetails} />
           <Stack.Screen name="CreateStory" component={CreateStory} />
           <Stack.Screen name="CreateStory2" component={CreateStory2} />
+          <Stack.Screen
+            name="ScaryStoryDetails"
+            component={ScaryStoryDetails}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </VampireProvider>
