@@ -58,11 +58,30 @@ export function VampireProvider({children}) {
     }
   };
 
+  const deleteCharacter = async (characterId) => {
+    try {
+      // Filter out the character to be deleted
+      const updatedCharacters = characters.filter(char => char.id !== characterId);
+      
+      // Save updated list to AsyncStorage
+      await AsyncStorage.setItem('characters', JSON.stringify(updatedCharacters));
+      
+      // Update state
+      setCharacters(updatedCharacters);
+      
+      return true;
+    } catch (error) {
+      console.error('Error deleting character:', error);
+      return false;
+    }
+  };
+
   const value = {
     characters,
     isLoading,
     saveCharacter,
-    refreshCharacters: loadCharacters, // Expose refresh function
+    deleteCharacter,
+    refreshCharacters: loadCharacters,
   };
 
   return (

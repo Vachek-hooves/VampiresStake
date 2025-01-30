@@ -5,11 +5,12 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {useVampireContext} from '../../store/context';
 
 const Character = ({navigation}) => {
-  const {characters} = useVampireContext();
+  const {characters, deleteCharacter} = useVampireContext();
   console.log(characters);
 
   const handleCreateCharacter = () => {
@@ -19,20 +20,56 @@ const Character = ({navigation}) => {
     navigation.navigate('CharacterDetails', {character});
   };
 
+  const handleDeleteCharacter = character => {
+    Alert.alert(
+      'Delete Character',
+      `Are you sure you want to delete ${character.name}? This action cannot be undone.`,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            const success = await deleteCharacter(character.id);
+            if (!success) {
+              Alert.alert(
+                'Error',
+                'Failed to delete character. Please try again.',
+              );
+            }
+          },
+        },
+      ],
+    );
+  };
+
   const renderCharacterCard = character => (
-    <TouchableOpacity
-      key={character.id}
-      style={styles.characterCard}
-      onPress={() => handleCharacterPress(character)}>
-      <Image
-        source={require('../../assets/icons/vampire.png')}
-        style={styles.characterIcon}
-      />
-      <View style={styles.characterInfo}>
-        <Text style={styles.characterName}>{character.name}</Text>
-        <Text style={styles.characterConcept}>{character.concept}</Text>
-      </View>
-    </TouchableOpacity>
+    <View key={character.id} style={styles.characterCard}>
+      <TouchableOpacity
+        style={styles.cardContent}
+        onPress={() => handleCharacterPress(character)}>
+        <Image
+          source={require('../../assets/icons/vampire.png')}
+          style={styles.characterIcon}
+        />
+        <View style={styles.characterInfo}>
+          <Text style={styles.characterName}>{character.name}</Text>
+          <Text style={styles.characterConcept}>{character.concept}</Text>
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={() => handleDeleteCharacter(character)}>
+        <Image
+          source={require('../../assets/icons/trash.png')}
+          style={styles.deleteIcon}
+        />
+      </TouchableOpacity>
+    </View>
   );
 
   return (
@@ -114,8 +151,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.3)',
     borderRadius: 12,
-    padding: 15,
     marginBottom: 10,
+  },
+  cardContent: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
   },
   characterIcon: {
     width: 40,
@@ -135,5 +177,15 @@ const styles = StyleSheet.create({
   characterConcept: {
     color: 'rgba(255,255,255,0.7)',
     fontSize: 14,
+  },
+  deleteButton: {
+    padding: 15,
+    borderLeftWidth: 1,
+    borderLeftColor: 'rgba(255,255,255,0.1)',
+  },
+  deleteIcon: {
+    width: 45,
+    height: 45,
+    tintColor: 'rgba(255,0,0,0.7)',
   },
 });
