@@ -17,6 +17,9 @@ const CharacterCreate = () => {
   const [concept, setConcept] = useState('');
   const [sire, setSire] = useState('');
   const [selectedClan, setSelectedClan] = useState('Ventrue'); // Default selection
+  const [hairStyle, setHairStyle] = useState('');
+  const [eyeColor, setEyeColor] = useState('');
+  const [uniqueMarks, setUniqueMarks] = useState('');
 
   const getRandomItem = array => {
     return array[Math.floor(Math.random() * array.length)];
@@ -168,10 +171,97 @@ const CharacterCreate = () => {
     </>
   );
 
+  const renderStepThree = () => (
+    <>
+      <Text style={styles.title}>Let's bring your character to life!</Text>
+
+      {/* Progress Indicators */}
+      <View style={styles.progressContainer}>
+        {[...Array(5)].map((_, index) => (
+          <View
+            key={index}
+            style={[styles.progressDot, {opacity: index === 2 ? 1 : 0.3}]}
+          />
+        ))}
+      </View>
+
+      <Text style={styles.description}>
+        Appearances can deceive, but they always leave a lasting impression. Describe how 
+        others perceive you in the shadows
+      </Text>
+
+      {/* Hair Style Input */}
+      <Text style={styles.label}>What is your hair color and style?</Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={hairStyle}
+          onChangeText={setHairStyle}
+          placeholder="Describe your hair..."
+          placeholderTextColor="#666"
+        />
+        <TouchableOpacity
+          style={styles.randomButton}
+          onPress={() => setHairStyle(getRandomItem(CHARACTER.APPEARANCES))}>
+          <Image
+            source={require('../../assets/icons/shuffle.png')}
+            style={styles.shuffleIcon}
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Eye Color Input */}
+      <Text style={styles.label}>What is the color of your eyes?</Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={eyeColor}
+          onChangeText={setEyeColor}
+          placeholder="Describe your eyes..."
+          placeholderTextColor="#666"
+        />
+        <TouchableOpacity
+          style={styles.randomButton}
+          onPress={() => setEyeColor(getRandomItem(CHARACTER.APPEARANCES))}>
+          <Image
+            source={require('../../assets/icons/shuffle.png')}
+            style={styles.shuffleIcon}
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Unique Marks Input */}
+      <Text style={styles.label}>Do you bear any scars, tattoos, or unique marks?</Text>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={uniqueMarks}
+          onChangeText={setUniqueMarks}
+          placeholder="Describe your marks..."
+          placeholderTextColor="#666"
+        />
+        <TouchableOpacity
+          style={styles.randomButton}
+          onPress={() => setUniqueMarks(getRandomItem(CHARACTER.APPEARANCES))}>
+          <Image
+            source={require('../../assets/icons/shuffle.png')}
+            style={styles.shuffleIcon}
+          />
+        </TouchableOpacity>
+      </View>
+
+      {/* Next Button */}
+      <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+        <Text style={styles.nextButtonText}>Next</Text>
+      </TouchableOpacity>
+    </>
+  );
+
   return (
     <View style={styles.container}>
       {currentStep === 1 && renderStepOne()}
       {currentStep === 2 && renderStepTwo()}
+      {currentStep === 3 && renderStepThree()}
     </View>
   );
 };
