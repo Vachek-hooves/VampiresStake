@@ -9,6 +9,8 @@ import CharacterDetails from './screen/stackScreen/CharacterDetails';
 import CreateStory from './screen/stackScreen/CreateStory';
 import CreateStory2 from './screen/stackScreen/CreateStory2';
 import ScaryStoryDetails from './screen/stackScreen/ScaryStoryDetails';
+import GameLevels from './screen/stackScreen/GameLevels';
+import PuzzleGame from './screen/stackScreen/PuzzleGame';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +30,8 @@ function App() {
             name="ScaryStoryDetails"
             component={ScaryStoryDetails}
           />
+          <Stack.Screen name="GameLevels" component={GameLevels} />
+          <Stack.Screen name="PuzzleGame" component={PuzzleGame} />
         </Stack.Navigator>
       </NavigationContainer>
     </VampireProvider>
