@@ -8,8 +8,9 @@ import {
   Dimensions,
   ImageBackground,
 } from 'react-native';
-import React from 'react';
-import {useNavigation} from '@react-navigation/native';
+import React, {useState, useEffect} from 'react';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import {BlurView} from '@react-native-community/blur';
 
 const {width} = Dimensions.get('window');
@@ -35,21 +36,43 @@ const puzzles = [
 
 const GameLevels = () => {
   const navigation = useNavigation();
+  const [completedPuzzles, setCompletedPuzzles] = useState([]);
+
+  // Load completed puzzles when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      loadCompletedPuzzles();
+    }, [])
+  );
+
+  const loadCompletedPuzzles = async () => {
+    try {
+      const completed = await AsyncStorage.getItem('completedPuzzles');
+      if (completed) {
+        setCompletedPuzzles(JSON.parse(completed));
+      }
+    } catch (error) {
+      console.log('Error loading completed puzzles:', error);
+    }
+  };
 
   const handlePuzzleSelect = puzzle => {
-    navigation.navigate('PuzzleGame', {puzzle});
+    navigation.navigate('PuzzleGame', {
+      puzzle,
+      puzzleId: puzzle.id // Pass only the ID instead of callback
+    });
   };
 
   const renderPuzzleCard = puzzle => (
     <TouchableOpacity
       key={puzzle.id}
       style={styles.puzzleCard}
-      onPress={() => handlePuzzleSelect(puzzle)} >
+      onPress={() => handlePuzzleSelect(puzzle)}>
       <View style={styles.imageContainer}>
         <Image
           source={puzzle.image}
           style={styles.puzzleImage}
-          blurRadius={100}
+          blurRadius={completedPuzzles.includes(puzzle.id) ? 0 : 100}
         />
         {/* <BlurView
           style={styles.blurOverlay}
@@ -65,24 +88,21 @@ const GameLevels = () => {
   );
 
   return (
-    // <ImageBackground
-    //   source={require('../../assets/images/dark-bg.png')}
-    //   style={styles.container}
-    //   resizeMode="cover">
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Choose Your Puzzle</Text>
-
+    <ImageBackground
+    //   source={require('../../assets/images/bg.png')}
+      style={styles.container}
+      resizeMode="cover">
+      <View style={styles.overlay}>
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}>
+          <Text style={styles.title}>Choose Puzzle</Text>
           <View style={styles.puzzlesGrid}>
             {puzzles.map(renderPuzzleCard)}
           </View>
-          <View style={{height: 100}}/>
         </ScrollView>
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 
@@ -96,7 +116,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: 'rgba(0,0,0,0.1)',
     padding: 20,
   },
   title: {

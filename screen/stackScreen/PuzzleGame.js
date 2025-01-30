@@ -12,6 +12,7 @@ import {
 import React, {useState, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import Share from 'react-native-share';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width, height} = Dimensions.get('window');
 const PIECES_COUNT = 12;
@@ -20,10 +21,11 @@ const PIECE_HEIGHT = PUZZLE_HEIGHT / PIECES_COUNT;
 
 const PuzzleGame = ({route}) => {
   const navigation = useNavigation();
-  const {puzzle} = route.params;
+  const {puzzle, puzzleId} = route.params;
   const [pieces, setPieces] = useState([]);
   const [currentPiece, setCurrentPiece] = useState(null);
   const [isComplete, setIsComplete] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     initializePuzzle();
@@ -101,30 +103,45 @@ const PuzzleGame = ({route}) => {
     },
   });
 
+  const markPuzzleAsCompleted = async () => {
+    try {
+      const completed = await AsyncStorage.getItem('completedPuzzles');
+      const completedPuzzles = completed ? JSON.parse(completed) : [];
+      
+      if (!completedPuzzles.includes(puzzleId)) {
+        const newCompleted = [...completedPuzzles, puzzleId];
+        await AsyncStorage.setItem('completedPuzzles', JSON.stringify(newCompleted));
+      }
+    } catch (error) {
+      console.log('Error saving completion status:', error);
+    }
+  };
+
   const checkCompletion = (currentPieces) => {
     const isComplete = currentPieces.every(
       piece => piece.currentPosition === piece.correctPosition
     );
     
-    if (isComplete) {
+    if (isComplete && !showSuccessModal) {
       setIsComplete(true);
+      markPuzzleAsCompleted();
     }
   };
 
-  const handleShare = async () => {
-    try {
-      const shareOptions = {
-        title: 'Share Puzzle',
-        url: Platform.OS === 'ios' ? 
-          `file://${puzzle.image}` : 
-          puzzle.image,
-        message: 'Check out this amazing puzzle I completed!',
-      };
-      await Share.open(shareOptions);
-    } catch (error) {
-      console.log('Error sharing:', error);
-    }
-  };
+  // const handleShare = async () => {
+  //   try {
+  //     const shareOptions = {
+  //       title: 'Share Puzzle',
+  //       url: Platform.OS === 'ios' ? 
+  //         `file://${puzzle.image}` : 
+  //         puzzle.image,
+  //       message: 'Check out this amazing puzzle I completed!',
+  //     };
+  //     await Share.open(shareOptions);
+  //   } catch (error) {
+  //     console.log('Error sharing:', error);
+  //   }
+  // };
 
   const handleMainMenu = () => {
     navigation.navigate('TabNavigator',{screen: 'Game'});
