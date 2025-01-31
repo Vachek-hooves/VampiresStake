@@ -18,7 +18,7 @@ const ScaryStoryDetails = ({route}) => {
   const {story} = route.params;
 
   const handleClose = () => {
-    // navigation.goBack();
+    navigation.goBack();
   };
 
   return (
