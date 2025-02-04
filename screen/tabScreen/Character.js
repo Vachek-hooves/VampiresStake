@@ -8,7 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import {useVampireContext} from '../../store/context';
-
+import ThisLayout from '../../comopnents/layout/ThisLayout';
 const Character = ({navigation}) => {
   const {characters, deleteCharacter} = useVampireContext();
   // console.log(characters);
@@ -63,8 +63,7 @@ const Character = ({navigation}) => {
 
       <TouchableOpacity
         style={styles.deleteButton}
-        onPress={() => handleDeleteCharacter(character)}
-      >
+        onPress={() => handleDeleteCharacter(character)}>
         <Image
           source={require('../../assets/icons/trash.png')}
           style={styles.deleteIcon}
@@ -74,30 +73,32 @@ const Character = ({navigation}) => {
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Let's bring your character to life!</Text>
+    <ThisLayout>
+      <View style={styles.container}>
+        <Text style={styles.title}>Let's bring your character to life!</Text>
 
-      <TouchableOpacity
-        style={styles.createButton}
-        onPress={handleCreateCharacter}>
-        <Text style={styles.createButtonText}>Create Character</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.createButton}
+          onPress={handleCreateCharacter}>
+          <Text style={styles.createButtonText}>Create Character</Text>
+        </TouchableOpacity>
 
-      {characters.length === 0 ? (
-        <View style={styles.emptyStateContainer}>
-          <Text style={styles.description}>
-            It looks like you don't have any characters yet. Start creating your
-            unique hero or villain by clicking the button above. Customize every
-            detail, from their appearance to their story. Your imagination is
-            the only limit!
-          </Text>
-        </View>
-      ) : (
-        <ScrollView style={styles.characterList}>
-          {characters.map(character => renderCharacterCard(character))}
-        </ScrollView>
-      )}
-    </View>
+        {characters.length === 0 ? (
+          <View style={styles.emptyStateContainer}>
+            <Text style={styles.description}>
+              It looks like you don't have any characters yet. Start creating
+              your unique hero or villain by clicking the button above.
+              Customize every detail, from their appearance to their story. Your
+              imagination is the only limit!
+            </Text>
+          </View>
+        ) : (
+          <ScrollView style={styles.characterList}>
+            {characters.map(character => renderCharacterCard(character))}
+          </ScrollView>
+        )}
+      </View>
+    </ThisLayout>
   );
 };
 
@@ -106,7 +107,7 @@ export default Character;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#142C38',
+    // backgroundColor: '#142C38',
     padding: 20,
     paddingTop: 50,
   },

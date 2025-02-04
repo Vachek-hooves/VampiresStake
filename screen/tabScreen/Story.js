@@ -2,6 +2,7 @@ import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useVampireContext} from '../../store/context';
+import ThisLayout from '../../comopnents/layout/ThisLayout';
 
 const Story = () => {
   const {stories} = useVampireContext();
@@ -14,29 +15,31 @@ const Story = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Your Story Awaits</Text>
+    <ThisLayout>
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <Text style={styles.title}>Your Story Awaits</Text>
 
-        <View style={styles.descriptionContainer}>
-          <Text style={styles.description}>
-            Every great tale starts with a single idea. Bring your imagination
-            to life by weaving stories with the characters you've created.
-          </Text>
+          <View style={styles.descriptionContainer}>
+            <Text style={styles.description}>
+              Every great tale starts with a single idea. Bring your imagination
+              to life by weaving stories with the characters you've created.
+            </Text>
 
-          <Text style={styles.description}>
-            Dive into the shadows, craft your plots, and let your legends
-            unfold. Your next masterpiece is waiting to be written!
-          </Text>
+            <Text style={styles.description}>
+              Dive into the shadows, craft your plots, and let your legends
+              unfold. Your next masterpiece is waiting to be written!
+            </Text>
+          </View>
+
+          <TouchableOpacity
+            style={styles.startButton}
+            onPress={handleStartWriting}>
+            <Text style={styles.startButtonText}>Start Writing</Text>
+          </TouchableOpacity>
         </View>
-
-        <TouchableOpacity
-          style={styles.startButton}
-          onPress={handleStartWriting}>
-          <Text style={styles.startButtonText}>Start Writing</Text>
-        </TouchableOpacity>
       </View>
-    </View>
+    </ThisLayout>
   );
 };
 
@@ -45,7 +48,7 @@ export default Story;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#142C38',
+    // backgroundColor: '#142C38',
   },
   content: {
     flex: 1,

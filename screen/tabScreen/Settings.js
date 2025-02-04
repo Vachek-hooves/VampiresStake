@@ -13,6 +13,7 @@ import {
   playBackgroundMusic,
   pauseBackgroundMusic,
 } from '../../SoundSetup/SoundSetUp';
+import ThisLayout from '../../comopnents/layout/ThisLayout';
 
 const Settings = () => {
   const {isMusicEnable, setIsMusicEnable} = useVampireContext();
@@ -48,38 +49,42 @@ const Settings = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Settings</Text>
+    <ThisLayout>
+      <View style={styles.container}>
+        <Text style={styles.title}>Settings</Text>
 
-      <View style={styles.settingsContainer}>
-        {/* Music Toggle */}
-        <View style={styles.settingRow}>
-          <Text style={styles.settingText}>Music</Text>
-          <Switch
-            value={isMusicEnable}
-            onValueChange={handleSoundToggle}
-            trackColor={{false: '#767577', true: '#0084ff'}}
-            thumbColor={isMusicEnable ? '#fff' : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
-          />
+        <View style={styles.settingsContainer}>
+          {/* Music Toggle */}
+          <View style={styles.settingRow}>
+            <Text style={styles.settingText}>Music</Text>
+            <Switch
+              value={isMusicEnable}
+              onValueChange={handleSoundToggle}
+              trackColor={{false: '#767577', true: '#0084ff'}}
+              thumbColor={isMusicEnable ? '#fff' : '#f4f3f4'}
+              ios_backgroundColor="#3e3e3e"
+            />
+          </View>
+
+          {/* Share App */}
+          <TouchableOpacity style={styles.settingRow} onPress={handleShareApp}>
+            <Text style={styles.settingText}>Share the app</Text>
+            {/* <Text style={styles.shareIcon}>→</Text> */}
+            <Image
+              source={require('../../assets/icons/share.png')}
+              style={styles.shareIcon}
+            />
+          </TouchableOpacity>
+
+          {/* Terms of Use */}
+          <TouchableOpacity
+            style={styles.settingRow}
+            onPress={handleTermsOfUse}>
+            <Text style={styles.settingText}>Privacy Policy</Text>
+          </TouchableOpacity>
         </View>
-
-        {/* Share App */}
-        <TouchableOpacity style={styles.settingRow} onPress={handleShareApp}>
-          <Text style={styles.settingText}>Share the app</Text>
-          {/* <Text style={styles.shareIcon}>→</Text> */}
-          <Image
-            source={require('../../assets/icons/share.png')}
-            style={styles.shareIcon}
-          />
-        </TouchableOpacity>
-
-        {/* Terms of Use */}
-        <TouchableOpacity style={styles.settingRow} onPress={handleTermsOfUse}>
-          <Text style={styles.settingText}>Privacy Policy</Text>
-        </TouchableOpacity>
       </View>
-    </View>
+    </ThisLayout>
   );
 };
 
@@ -88,7 +93,7 @@ export default Settings;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#142C38',
+    // backgroundColor: '#142C38',
     padding: 20,
     paddingTop: '20%',
   },

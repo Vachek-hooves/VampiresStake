@@ -11,6 +11,7 @@ import React from 'react';
 import {scaryStory} from '../../data/scaryStory';
 import {useVampireContext} from '../../store/context';
 import {useNavigation} from '@react-navigation/native';
+import ThisLayout from '../../comopnents/layout/ThisLayout';
 
 const {width} = Dimensions.get('window');
 const CARD_WIDTH = (width - 60) / 2; // 20px padding on each side, 20px gap
@@ -45,21 +46,23 @@ const AllStories = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.headerTitle}>Stories</Text>
+    <ThisLayout>
+      <View style={styles.container}>
+        <Text style={styles.headerTitle}>Stories</Text>
 
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}>
-        <View style={styles.storiesGrid}>
-          {/* Render predefined scary stories */}
-          {scaryStory.map((story, index) => renderStoryCard(story, index))}
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}>
+          <View style={styles.storiesGrid}>
+            {/* Render predefined scary stories */}
+            {scaryStory.map((story, index) => renderStoryCard(story, index))}
 
-          {/* Render user-created stories */}
-          {stories.map((story, index) => renderStoryCard(story, index))}
-        </View>
-      </ScrollView>
-    </View>
+            {/* Render user-created stories */}
+            {stories.map((story, index) => renderStoryCard(story, index))}
+          </View>
+        </ScrollView>
+      </View>
+    </ThisLayout>
   );
 };
 
@@ -68,7 +71,7 @@ export default AllStories;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#142C38',
+    // backgroundColor: '#142C38',
     padding: 20,
   },
   headerTitle: {
